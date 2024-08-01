@@ -6,3 +6,4 @@ openai==1.37.1
 pypdf
 tiktoken==0.7.0
 chromadb==0.3.29
+PyMuPDF
