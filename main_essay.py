@@ -12,6 +12,7 @@ import tempfile
 from PIL import Image
 import io
 
+# /.devcontainer/devcontainer.json 기준, 해당 파일이 streamlit에 업로드 됩니다.
 
 st.set_page_config(layout="wide")
 # 제목
@@ -19,7 +20,7 @@ st.title("AI 논술선생님")
 uploaded_file = st.file_uploader("논술문제를 업로드 해주세요")
 st.write("---")
 
-
+# 논술자료 pdf 업로드
 def pdf_to_images(pdf_path):
     # Open the PDF file
     pdf_document = fitz.open(pdf_path)
@@ -33,11 +34,10 @@ def pdf_to_images(pdf_path):
         pdf_images.append(pdf_img)
     return pdf_images
 
-
+# 구성요소를 좌,우로 분할
 col1, col2 = st.columns(2)
 
-# 파일 업로드
-
+# 왼쪽 구성요소
 with col1:
     if uploaded_file is not None:
         # Save the uploaded file to a temporary file
@@ -68,7 +68,7 @@ def pdf_to_document(upload_file):
     return new_pages
 
 
-# 업로드 되면 동작하는 코드
+# 오른쪽 구성요소
 with col2:
     if uploaded_file is not None:
         try:
@@ -107,6 +107,7 @@ with col2:
                         retriever=chromadb.as_retriever(search_kwargs={"k": 3}),
                         return_source_documents=True
                     )
+                    # 프롬프트 작성.
                     result = qa_chain({"query": "당신은 논술 선생님입니다." +
                                                 "학생이 작성한 답안을 보고 피드백을 주어야 합니다./n" +
                                                 "출력 양식은 다음과 같습니다 :/n/n" +
